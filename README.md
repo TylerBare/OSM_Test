@@ -1,0 +1,1 @@
+Customized version of the Rapid editor.
