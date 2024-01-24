@@ -1,1 +1,2 @@
-Customized version of the Rapid editor.
+Customized version of the RapiD editor.
+See: https://github.com/facebook/Rapid
