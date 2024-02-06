@@ -3,12 +3,12 @@ import { select as d3_select } from 'd3-selection';
 import { Extent } from '@rapid-sdk/math';
 import { marked } from 'marked';
 
-import { uiIcon } from './icon.js';
-import { uiCombobox} from './combobox.js';
-import { utilKeybinding, utilNoAuto, utilRebind } from '../util/index.js';
+import { uiIcon } from './icon';
+import { uiCombobox } from './combobox';
+import { utilKeybinding, utilNoAuto, utilRebind } from '../util';
 
 
-export function uiRapidViewManageDatasets(context, parentModal) {
+export function uiRapidViewManageGeonodeDatasets(context, parentModal) {
   const l10n = context.systems.l10n;
   const rapid = context.systems.rapid;
   const dispatch = d3_dispatch('done');
@@ -101,12 +101,12 @@ export function uiRapidViewManageDatasets(context, parentModal) {
     line1
       .append('div')
       .attr('class', 'rapid-view-manage-header-icon')
-      .call(uiIcon('#rapid-icon-data', 'icon-30'));
+      .call(uiIcon('#rapid-icon-geonode', 'icon-30'));
 
     line1
       .append('div')
       .attr('class', 'rapid-view-manage-header-text')
-      .text(l10n.t('rapid_feature_toggle.esri.title'));
+      .text(l10n.t('rapid_feature_toggle.geonode.title'));
 
     let line2 = headerEnter
       .append('div');
@@ -114,7 +114,7 @@ export function uiRapidViewManageDatasets(context, parentModal) {
     line2
       .append('div')
       .attr('class', 'rapid-view-manage-header-about')
-      .html(marked.parse(l10n.t('rapid_feature_toggle.esri.about')));
+      .html(marked.parse(l10n.t('rapid_feature_toggle.geonode.about')));
 
     line2.selectAll('a')
       .attr('target', '_blank');
@@ -236,9 +236,9 @@ export function uiRapidViewManageDatasets(context, parentModal) {
 
     const prefs = context.systems.storage;
     const showPreview = prefs.getItem('rapid-internal-feature.previewDatasets') === 'true';
-    const esri = context.services.esri;
+    const geonode = context.services.geonode;
 
-    if (!esri || (Array.isArray(_datasetInfo) && !_datasetInfo.length)) {
+    if (!geonode || (Array.isArray(_datasetInfo) && !_datasetInfo.length)) {
       results.classed('hide', true);
       status.classed('hide', false).text(l10n.t('rapid_feature_toggle.esri.no_datasets'));
       return;
@@ -257,29 +257,29 @@ export function uiRapidViewManageDatasets(context, parentModal) {
         .attr('class', 'rapid-view-manage-datasets-spinner')
         .attr('src', context.asset('img/loader-black.gif'));
 
-      esri.startAsync()
-        .then(() => esri.loadDatasetsAsync())
+      geonode.startAsync()
+        .then(() => geonode.loadDatasetsAsync())
         .then(results => {
           // Build set of available categories
-          let categories = new Set();
+          // let categories = new Set();
 
-          Object.values(results).forEach(d => {
-            d.groupCategories.forEach(c => {
-              categories.add(c.toLowerCase().replace('/categories/', ''));
-            });
-          });
-          if (!showPreview) categories.delete('preview');
+          // Object.values(results).forEach(d => {
+          //   d.groupCategories.forEach(c => {
+          //     categories.add(c.toLowerCase().replace('/categories/', ''));
+          //   });
+          // });
+          // if (!showPreview) categories.delete('preview');
 
-          const combodata = Array.from(categories).sort().map(c => {
-            let item = { title: c, value: c };
-            if (c === 'preview') item.display = `${c} <span class="rapid-view-manage-dataset-beta beta"></span>`;
-            return item;
-          });
-          categoryCombo.data(combodata);
+          // const combodata = Array.from(categories).sort().map(c => {
+          //   let item = { title: c, value: c };
+          //   if (c === 'preview') item.display = `${c} <span class="rapid-view-manage-dataset-beta beta"></span>`;
+          //   return item;
+          // });
+          // categoryCombo.data(combodata);
 
           // Exclude preview datasets unless user has opted into them
-          _datasetInfo = Object.values(results)
-            .filter(d => showPreview || !d.groupCategories.some(category => category.toLowerCase() === '/categories/preview'));
+          _datasetInfo = Object.values(results);
+          // .filter(d => showPreview || !d.groupCategories.some(category => category.toLowerCase() === '/categories/preview'));
 
           return _datasetInfo;
         })
@@ -295,23 +295,23 @@ export function uiRapidViewManageDatasets(context, parentModal) {
     let count = 0;
     _datasetInfo.forEach(d => {
       const title = (d.title || '').toLowerCase();
-      const snippet = (d.snippet || '').toLowerCase();
+      const snippet = (d.abstract || '').toLowerCase();
 
-      if (datasetAdded(d)) {  // always show added datasets at the top of the list
-        d.filtered = false;
-        ++count;
-        return;
-      }
-      if (_filterText && title.indexOf(_filterText) === -1 && snippet.indexOf(_filterText) === -1) {
-        d.filtered = true;   // filterText not found anywhere in `title` or `snippet`
-        return;
-      }
-      if (_filterCategory && !(d.groupCategories.some(category => category.toLowerCase() === `/categories/${_filterCategory}`))) {
-        d.filtered = true;   // filterCategory not found anywhere in `groupCategories``
-        return;
-      }
+      // if (datasetAdded(d)) {  // always show added datasets at the top of the list
+      //   d.filtered = false;
+      //   ++count;
+      //   return;
+      // }
+      // if (_filterText && title.indexOf(_filterText) === -1 && snippet.indexOf(_filterText) === -1) {
+      //   d.filtered = true;   // filterText not found anywhere in `title` or `snippet`
+      //   return;
+      // }
+      // if (_filterCategory && !(d.groupCategories.some(category => category.toLowerCase() === `/categories/${_filterCategory}`))) {
+      //   d.filtered = true;   // filterCategory not found anywhere in `groupCategories``
+      //   return;
+      // }
 
-      d.filtered = (++count > MAXRESULTS);
+      // d.filtered = (++count > MAXRESULTS);
     });
 
 
@@ -346,7 +346,7 @@ export function uiRapidViewManageDatasets(context, parentModal) {
       .call(uiIcon('#rapid-icon-out-link', 'inline'));
 
     let featuredEnter = labelsEnter.selectAll('.rapid-view-manage-dataset-featured')
-      .data(d => d.groupCategories.filter(d => d.toLowerCase() === '/categories/featured'))
+      // .data(d => d.groupCategories.filter(d => d.toLowerCase() === '/categories/featured'))
       .enter()
       .append('div')
       .attr('class', 'rapid-view-manage-dataset-featured');
@@ -360,7 +360,7 @@ export function uiRapidViewManageDatasets(context, parentModal) {
       .text(l10n.t('rapid_feature_toggle.esri.featured'));
 
     labelsEnter.selectAll('.rapid-view-manage-dataset-beta')
-      .data(d => d.groupCategories.filter(d => d.toLowerCase() === '/categories/preview'))
+      // .data(d => d.groupCategories.filter(d => d.toLowerCase() === '/categories/preview'))
       .enter()
       .append('div')
       .attr('class', 'rapid-view-manage-dataset-beta beta')
@@ -382,13 +382,13 @@ export function uiRapidViewManageDatasets(context, parentModal) {
     thumbsEnter
       .append('img')
       .attr('class', 'rapid-view-manage-dataset-thumbnail')
-      .attr('src', d => `https://openstreetmap.maps.arcgis.com/sharing/rest/content/items/${d.id}/info/${d.thumbnail}?w=400`);
+      .attr('src', d => d.thumbnail_url);
 
     // update
     datasets = datasets
       .merge(datasetsEnter)
-      .sort(sortDatasets)
-      .classed('hide', d => d.filtered);
+      .sort(sortDatasets);
+    // .classed('hide', d => d.filtered);
 
     datasets.selectAll('.rapid-view-manage-dataset-name')
       .html(d => highlight(_filterText, d.title));
@@ -414,14 +414,14 @@ export function uiRapidViewManageDatasets(context, parentModal) {
   function sortDatasets(a, b) {
     const aAdded = datasetAdded(a);
     const bAdded = datasetAdded(b);
-    const aFeatured = a.groupCategories.some(d => d.toLowerCase() === '/categories/featured');
-    const bFeatured = b.groupCategories.some(d => d.toLowerCase() === '/categories/featured');
+    // const aFeatured = a.groupCategories.some(d => d.toLowerCase() === '/categories/featured');
+    // const bFeatured = b.groupCategories.some(d => d.toLowerCase() === '/categories/featured');
 
     return aAdded && !bAdded ? -1
       : bAdded && !aAdded ? 1
-      : aFeatured && !bFeatured ? -1
-      : bFeatured && !aFeatured ? 1
-      : a.title.localeCompare(b.title);
+        // : aFeatured && !bFeatured ? -1
+        // : bFeatured && !aFeatured ? 1
+        : a.title.localeCompare(b.title);
   }
 
 
@@ -433,13 +433,15 @@ export function uiRapidViewManageDatasets(context, parentModal) {
       ds.added = !ds.added;
 
     } else {  // hasn't been added yet
-      const esri = context.services.esri;
-      if (esri) {   // start fetching layer info (the mapping between attributes and tags)
-        esri.loadLayerAsync(d.id);
+      const geonodeService = context.services.geonode;
+      if (geonodeService) {   // start fetching layer info (the mapping between attributes and tags)
+        geonodeService.loadLayerAsync(d.id);
       }
 
-      const isBeta = d.groupCategories.some(cat => cat.toLowerCase() === '/categories/preview');
-      const isBuildings = d.groupCategories.some(cat => cat.toLowerCase() === '/categories/buildings');
+      // const isBeta = d.groupCategories.some(cat => cat.toLowerCase() === '/categories/preview');
+      // const isBuildings = d.groupCategories.some(cat => cat.toLowerCase() === '/categories/buildings');
+      const isBeta = false;
+      const isBuildings = false;
 
       // pick a new color
       const colors = rapid.colors;
@@ -451,9 +453,9 @@ export function uiRapidViewManageDatasets(context, parentModal) {
         added: true,         // whether it should appear in the list
         enabled: true,       // whether the user has checked it on
         conflated: false,
-        service: 'esri',
+        service: 'geonode',
         color: colors[colorIndex],
-        dataUsed: ['esri', d.title],
+        dataUsed: ['geonode', d.title],
         label: d.title,
         license_markdown: l10n.t('rapid_feature_toggle.esri.license_markdown')
       };

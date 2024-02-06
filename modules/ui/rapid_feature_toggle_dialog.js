@@ -5,7 +5,8 @@ import { icon } from './intro/helper.js';
 import { uiIcon } from './icon.js';
 import { uiModal } from './modal.js';
 import { uiRapidColorpicker } from './rapid_colorpicker.js';
-import { uiRapidViewManageDatasets } from './rapid_view_manage_datasets.js';
+import { uiRapidViewManageEsriDatasets } from './rapid_view_manage_esri_datasets';
+import { uiRapidViewManageGeonodeDatasets } from './rapid_view_manage_geonode_datasets';
 
 
 export function uiRapidFeatureToggleDialog(context, AIFeatureToggleKey, featureToggleKeyDispatcher) {
@@ -14,7 +15,8 @@ export function uiRapidFeatureToggleDialog(context, AIFeatureToggleKey, featureT
 
   let _modalSelection = d3_select(null);
   let _content = d3_select(null);
-  let _viewManageModal;
+  let _viewManageEsriModal;
+  let _viewManageGeonodeModal;
   let _colorpicker;
 
 
@@ -78,7 +80,10 @@ export function uiRapidFeatureToggleDialog(context, AIFeatureToggleKey, featureT
     _modalSelection.select('.modal')
       .attr('class', 'modal rapid-modal');   // Rapid styling
 
-    _viewManageModal = uiRapidViewManageDatasets(context, _modalSelection)
+    _viewManageEsriModal = uiRapidViewManageEsriDatasets(context, _modalSelection)
+      .on('done', () => _content.call(renderModalContent));
+
+    _viewManageGeonodeModal = uiRapidViewManageGeonodeDatasets(context, _modalSelection)
       .on('done', () => _content.call(renderModalContent));
 
     _colorpicker = uiRapidColorpicker(context, _modalSelection)
@@ -97,7 +102,7 @@ export function uiRapidFeatureToggleDialog(context, AIFeatureToggleKey, featureT
       .focus();
 
     featureToggleKeyDispatcher
-      .on('ai_feature_toggle', () => _content.call(renderModalContent) );
+      .on('ai_feature_toggle', () => _content.call(renderModalContent));
   };
 
 
@@ -166,22 +171,44 @@ export function uiRapidFeatureToggleDialog(context, AIFeatureToggleKey, featureT
       .call(renderDatasets);
 
 
-    /* View/Manage Datasets */
-    let manageDatasetsEnter = selection.selectAll('.rapid-manage-datasets')
+    /* View/Manage ESRI Datasets */
+    let manageEsriDatasetsEnter = selection.selectAll('.rapid-manage-esri-datasets')
       .data([0])
       .enter()
       .append('div')
-      .attr('class', 'modal-section rapid-checkbox rapid-manage-datasets')
-      .on('click', () => context.container().call(_viewManageModal));
+      .attr('class', 'modal-section rapid-checkbox rapid-manage-esri-datasets')
+      .on('click', () => context.container().call(_viewManageEsriModal));
 
-    manageDatasetsEnter
+    manageEsriDatasetsEnter
       .append('div')
       .attr('class', 'rapid-feature-label-container')
       .append('div')
       .attr('class', 'rapid-feature-label')
-      .text(l10n.t('rapid_feature_toggle.view_manage_datasets'));
+      .text(l10n.t('rapid_feature_toggle.view_manage_esri_datasets'));
 
-    manageDatasetsEnter
+    manageEsriDatasetsEnter
+      .append('div')
+      .attr('class', 'rapid-checkbox-inputs')
+      .append('div')
+      .attr('class', 'rapid-checkbox-label')
+      .call(uiIcon(l10n.isRTL() ? '#rapid-icon-backward' : '#rapid-icon-forward', 'icon-30'));
+
+    /* View/Manage GeoNode Datasets */
+    let manageGeonodeDatasetsEnter = selection.selectAll('.rapid-manage-geonode-datasets')
+      .data([0])
+      .enter()
+      .append('div')
+      .attr('class', 'modal-section rapid-checkbox rapid-manage-geonode-datasets')
+      .on('click', () => context.container().call(_viewManageGeonodeModal));
+
+    manageGeonodeDatasetsEnter
+      .append('div')
+      .attr('class', 'rapid-feature-label-container')
+      .append('div')
+      .attr('class', 'rapid-feature-label')
+      .text(l10n.t('rapid_feature_toggle.view_manage_geonode_datasets'));
+
+    manageGeonodeDatasetsEnter
       .append('div')
       .attr('class', 'rapid-checkbox-inputs')
       .append('div')

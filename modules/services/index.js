@@ -1,4 +1,5 @@
 import { EsriService } from './EsriService.js';
+import { GeonodeService } from './GeonodeService.js';
 import { ImproveOsmService } from './ImproveOsmService.js';
 import { KartaviewService } from './KartaviewService.js';
 import { KeepRightService } from './KeepRightService.js';
@@ -17,6 +18,7 @@ import { WikipediaService } from './WikipediaService.js';
 
 export {
   EsriService,
+  GeonodeService,
   ImproveOsmService,
   KartaviewService,
   KeepRightService,
@@ -40,6 +42,7 @@ export const services = {
 };
 
 services.available.set('esri', EsriService);
+services.available.set('geonode', GeonodeService);
 services.available.set('improveOSM', ImproveOsmService);
 services.available.set('kartaview', KartaviewService);
 services.available.set('keepRight', KeepRightService);

@@ -560,12 +560,14 @@ button.bugnub {
     border-bottom: 1px solid #888a;
     padding: 45px 10px 10px 10px;
 }
-.rapid-stack .modal-section.rapid-checkbox.rapid-manage-datasets {
+.rapid-stack .modal-section.rapid-checkbox.rapid-manage-esri-datasets,
+.rapid-stack .modal-section.rapid-checkbox.rapid-manage-geonode-datasets {
     border-top: 1px solid #888a;
     padding: 10px;
     cursor: pointer;
 }
-.rapid-stack .modal-section.rapid-checkbox.rapid-manage-datasets:hover {
+.rapid-stack .modal-section.rapid-checkbox.rapid-manage-esri-datasets:hover,
+.rapid-stack .modal-section.rapid-checkbox.rapid-manage-geonode-datasets:hover {
     color: #ddd;
     background: #8885;
 }

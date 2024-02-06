@@ -169,7 +169,7 @@ export class RapidSystem extends AbstractSystem {
    */
   setTaskExtentByGpxData(gpxDomData) {
     const gj = gpx(gpxDomData);
-    const lineStringCount = gj.features.reduce((accumulator, currentValue) =>  {
+    const lineStringCount = gj.features.reduce((accumulator, currentValue) => {
       return accumulator + (currentValue.geometry.type === 'LineString' ? 1 : 0);
     }, 0);
 
@@ -245,9 +245,9 @@ export class RapidSystem extends AbstractSystem {
       const annotation = edit.annotation;
 
       if (annotation?.type === 'rapid_accept_feature') {
-        if (annotation.entityID)  this.acceptIDs.add(annotation.entityID);
+        if (annotation.entityID) this.acceptIDs.add(annotation.entityID);
       } else if (annotation?.type === 'rapid_ignore_feature') {
-        if (annotation.entityID)  this.ignoreIDs.add(annotation.entityID);
+        if (annotation.entityID) this.ignoreIDs.add(annotation.entityID);
       }
 
     }
@@ -272,7 +272,7 @@ export class RapidSystem extends AbstractSystem {
     } else {
       return title;
     }
-}
+  }
 
   /**
    * _hashchange
@@ -337,6 +337,54 @@ export class RapidSystem extends AbstractSystem {
             service: 'esri',
             color: RAPID_COLORS[nextColor],
             dataUsed: ['esri', this._openBuildingsTitle(d.title)],
+            label: d.title,
+            license_markdown: l10n.t('rapid_feature_toggle.esri.license_markdown')
+          };
+
+          if (d.extent) {
+            dataset.extent = new Extent(d.extent[0], d.extent[1]);
+          }
+
+          // Test running building layers through MapWithAI conflation service
+          if (isBuildings) {
+            dataset.conflated = true;
+            dataset.service = 'mapwithai';
+          }
+
+          this._datasets.set(d.id, dataset);  // add it
+        }
+      });
+
+    const geonode = this.context.services.geonode;
+    if (!geonode || !toEnable.size) return;
+
+    geonode.startAsync()
+      .then(() => geonode.loadDatasetsAsync())
+      .then(results => {
+        const l10n = this.context.systems.l10n;
+
+        for (const datasetID of toEnable) {
+          const d = results[datasetID];
+          if (!d) continue;  // dataset with requested id not found, fail silently
+
+          // *** Code here is copied from `rapid_view_manage_datasets.js` `toggleDataset()` ***
+          geonode.loadLayerAsync(d.id);   // start fetching layer info (the mapping between attributes and tags)
+
+          // const isBeta = d.groupCategories.some(cat => cat.toLowerCase() === '/categories/preview');
+          // const isBuildings = d.groupCategories.some(cat => cat.toLowerCase() === '/categories/buildings');
+          const isBeta = false;
+          const isBuildings = false;
+          const nextColor = this._datasets.size % RAPID_COLORS.length;
+
+          const dataset = {
+            id: d.id,
+            beta: isBeta,
+            added: true,       // whether it should appear in the list
+            enabled: true,     // whether the user has checked it on
+            conflated: false,
+            service: 'geonode',
+            color: RAPID_COLORS[nextColor],
+            dataUsed: ['geonode', d.title],
             label: d.title,
             license_markdown: l10n.t('rapid_feature_toggle.esri.license_markdown')
           };

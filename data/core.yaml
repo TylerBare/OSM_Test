@@ -19,6 +19,7 @@ en:
     favorites: Favorites
     add_feature: Add Feature
     rapid_features: Assist
+    geonode: GeoNode
   title:
     format:
       context: "{base} – {context}"
@@ -1119,7 +1120,8 @@ en:
   rapid_feature_license: Facebook's Map With AI License
   rapid_feature_toggle:
     toggle_all: Toggle all {rapidicon} features
-    view_manage_datasets: "Add/Manage Datasets"
+    view_manage_esri_datasets: "Add/Manage ESRI Datasets"
+    view_manage_geonode_datasets: "Add/Manage GeoNode Datasets"
     center_map: Center map here
     worldwide: Worldwide
     fbRoads:
@@ -1142,6 +1144,9 @@ en:
       add_to_map: Add Dataset
       more_info: More Info
       license_markdown: "[license](https://wiki.openstreetmap.org/wiki/Esri/ArcGIS_Datasets#License)"
+    geonode:
+      title: GeoNode Datasets
+      about: "These datasets have been provided as open data by the GeoNode user community for the purpose of improving OpenStreetMap."
   rapid_poweruser_features:
     beta: Beta Feature
     heading:
