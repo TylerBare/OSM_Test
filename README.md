@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-Customized version of the RapiD editor.
-See: https://github.com/facebook/Rapid
-=======
 [![build](https://github.com/facebook/Rapid/workflows/build/badge.svg)](https://github.com/facebook/Rapid/actions?query=workflow%3A%22build%22)
 [![npm version](https://badge.fury.io/js/%40rapideditor%2Frapid.svg)](https://badge.fury.io/js/%40rapideditor%2Frapid)
 
@@ -45,4 +41,3 @@ We're available to chat!  Ping us on the `#rapid_feedback` channel on either:
 
 Rapid is available under the [ISC License](https://opensource.org/licenses/ISC).
 See the [LICENSE.md](LICENSE.md) file for more details.
->>>>>>> main
