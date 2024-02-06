@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <title>Mocha Tests</title>
+  <link rel='stylesheet' href='../node_modules/mocha/mocha.css'>
+  <link rel='stylesheet' href='../dist/rapid.css'>
+  <style type='text/css'>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body style="overflow:scroll">
+  <div id='mocha'></div>
+
+  <script src='../node_modules/mocha/mocha.js'></script>
+  <script src='../node_modules/sinon/pkg/sinon.js'></script>
+  <script src='../node_modules/happen/happen.js'></script>
+  <script src='../node_modules/fetch-mock/es5/client-bundle.js'></script>
+  <script src='../dist/rapid.js'></script>
+
+  <script type='module' src='./spec_helpers.js'></script>
+
+  <script>
+    var scripts = [
+      'browser/Context.test.js',
+
+      'browser/core/DataLoaderSystem.test.js',
+      'browser/core/EditSystem.test.js',
+      'browser/core/FilterSystem.test.js',
+      'browser/core/LocalizationSystem.test.js',
+      'browser/core/LocationSystem.test.js',
+      'browser/core/MapSystem.Test.js',
+      'browser/core/PresetSystem.test.js',
+      'browser/core/UrlHashSystem.test.js',
+      'browser/core/ValidationSystem.test.js',
+
+      'browser/operations/extract.js',
+      'browser/operations/straighten.js',
+
+      'browser/services/KartaviewService.test.js',
+      'browser/services/MapillaryService.test.js',
+      'browser/services/NominatimService.test.js',
+      'browser/services/OsmService.test.js',
+      'browser/services/OsmWikibaseService.test.js',
+      'browser/services/StreetsideService.test.js',
+      'browser/services/TaginfoService.test.js',
+
+      'browser/svg/tag_classes.js',
+
+      'browser/ui/cmd.js',
+      'browser/ui/combobox.js',
+      'browser/ui/confirm.js',
+      'browser/ui/flash.js',
+      'browser/ui/icon.js',
+      'browser/ui/modal.js',
+
+      'browser/ui/sections/raw_tag_editor.js',
+
+      'browser/ui/fields/access.js',
+      'browser/ui/fields/localized.js',
+      'browser/ui/fields/wikipedia.js',
+
+      'browser/util/keybinding.js',
+
+      'browser/validations/almost_junction.js',
+      'browser/validations/ambiguous_crossing_tags.js',
+      'browser/validations/crossing_ways.js',
+      'browser/validations/disconnected_way.js',
+      'browser/validations/incompatible_source.js',
+      'browser/validations/mismatched_geometry.js',
+      'browser/validations/missing_role.js',
+      'browser/validations/missing_tag.js',
+      'browser/validations/outdated_tags.js',
+      'browser/validations/private_data.js',
+      'browser/validations/suspicious_name.js'
+    ];
+
+    window.executionErrors = [];
+
+    window.onerror = function (message, source, line, col) {
+      window.executionErrors.push(message + " source: " + source + " line: " + line + " col: " + col);
+    };
+
+    // Create and execute all test scripts in specified order..
+    function nextScript() {
+      if (!scripts.length) {
+        window.mocha.run();
+
+        if (window.executionErrors.length > 0){
+          console.log('\n[Execution errors exist] Please resolve the following:');
+          for (var i = 0; i < window.executionErrors.length; i++){
+            console.log('[Execution error] ' + window.executionErrors[i]);
+          }
+          console.log('Disposing mocha.');
+          window.mocha.dispose();
+        }
+        return;
+      }
+      var src = scripts.shift();
+      var newScript;
+      newScript = document.createElement('script');
+      newScript.type = 'text/javascript';
+      newScript.src = src;
+      newScript.onload = nextScript;
+      document.getElementsByTagName('body')[0].appendChild(newScript);
+    }
+
+    // Defer start, this allows `spec_helpers.js` to be run as a module
+    document.addEventListener('DOMContentLoaded', () => nextScript());
+  </script>
+
+</body>
+</html>
