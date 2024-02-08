@@ -25,7 +25,7 @@ export class PixiFeaturePoint extends AbstractFeature {
    * @param  layer       The Layer that owns this Feature
    * @param  featureID   Unique string to use for the name of this Feature
    */
-  constructor(layer, featureID) {
+  constructor(layer, featureID, minZoom = 0, maxZoom = 99) {
     super(layer, featureID);
 
     this.type = 'point';
@@ -49,6 +49,9 @@ export class PixiFeaturePoint extends AbstractFeature {
     this.icon = icon;
 
     this.viewfields = null;   // add later only if needed
+
+    this.minZoom = minZoom;
+    this.maxZoom = maxZoom;
 
     this.container.addChild(marker, icon);
   }
@@ -208,11 +211,11 @@ export class PixiFeaturePoint extends AbstractFeature {
     // Apply effectiveZoom style adjustments
     // This is where we adjust the actual texture and anchor properties
     //
-    if (zoom < 16) {  // Hide container and everything under it
+    if (zoom < this.minZoom) {  // Hide container and everything under it
       this.lod = 0;   // off
       this.visible = false;
 
-    } else if (zoom < 17 || wireframeMode) {  // Markers drawn but smaller
+    } else if (zoom < this.minZoom + 1 || wireframeMode) {  // Markers drawn but smaller
       this.lod = 1;  // simplified
       this.visible = true;
       this.container.scale.set(0.8, 0.8);

@@ -76,6 +76,7 @@ export class PixiFeatureLine extends AbstractFeature {
    * @param  zoom        Effective zoom to use for rendering
    */
   update(projection, zoom) {
+    console.log('UPDATE', this.layer.layerID);  // eslint-disable-line
     if (!this.dirty) return;  // nothing to do
 
     const wireframeMode = this.context.systems.map.wireframeMode;

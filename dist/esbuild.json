@@ -14876,7 +14876,7 @@
       "format": "esm"
     },
     "modules/pixi/PixiFeatureLine.js": {
-      "bytes": 11206,
+      "bytes": 11277,
       "imports": [
         {
           "path": "node_modules/pixi.js/lib/index.mjs",
@@ -14907,7 +14907,7 @@
       "format": "esm"
     },
     "modules/pixi/PixiFeaturePoint.js": {
-      "bytes": 12205,
+      "bytes": 12313,
       "imports": [
         {
           "path": "node_modules/pixi.js/lib/index.mjs",
@@ -19671,7 +19671,7 @@
       "format": "esm"
     },
     "modules/ui/rapid_view_manage_esri_datasets.js": {
-      "bytes": 15878,
+      "bytes": 15923,
       "imports": [
         {
           "path": "node_modules/d3-dispatch/src/index.js",
@@ -19712,7 +19712,7 @@
       "format": "esm"
     },
     "modules/ui/rapid_view_manage_geonode_datasets.js": {
-      "bytes": 16022,
+      "bytes": 16145,
       "imports": [
         {
           "path": "node_modules/d3-dispatch/src/index.js",
@@ -23229,7 +23229,7 @@
       "format": "esm"
     },
     "modules/services/GeonodeService.js": {
-      "bytes": 10077,
+      "bytes": 10493,
       "imports": [
         {
           "path": "node_modules/d3-selection/src/index.js",
@@ -23240,11 +23240,6 @@
           "path": "node_modules/@rapid-sdk/math/built/math.mjs",
           "kind": "import-statement",
           "original": "@rapid-sdk/math"
-        },
-        {
-          "path": "node_modules/@rapid-sdk/util/built/util.mjs",
-          "kind": "import-statement",
-          "original": "@rapid-sdk/util"
         },
         {
           "path": "modules/core/AbstractSystem.js",
@@ -23668,7 +23663,7 @@
       "format": "esm"
     },
     "modules/services/OsmService.js": {
-      "bytes": 48702,
+      "bytes": 48838,
       "imports": [
         {
           "path": "node_modules/@rapid-sdk/math/built/math.mjs",
@@ -28264,7 +28259,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 9622607
+      "bytes": 9624039
     },
     "dist/rapid.js": {
       "imports": [],
@@ -30339,10 +30334,10 @@
           "bytesInOutput": 6302
         },
         "modules/pixi/PixiFeatureLine.js": {
-          "bytesInOutput": 9889
+          "bytesInOutput": 9938
         },
         "modules/pixi/PixiFeaturePoint.js": {
-          "bytesInOutput": 9918
+          "bytesInOutput": 10029
         },
         "modules/pixi/PixiFeaturePolygon.js": {
           "bytesInOutput": 11852
@@ -30795,10 +30790,10 @@
           "bytesInOutput": 69550
         },
         "modules/ui/rapid_view_manage_esri_datasets.js": {
-          "bytesInOutput": 13647
+          "bytesInOutput": 13683
         },
         "modules/ui/rapid_view_manage_geonode_datasets.js": {
-          "bytesInOutput": 11705
+          "bytesInOutput": 11836
         },
         "modules/ui/rapid_feature_toggle_dialog.js": {
           "bytesInOutput": 9008
@@ -31119,7 +31114,7 @@
           "bytesInOutput": 11523
         },
         "modules/services/GeonodeService.js": {
-          "bytesInOutput": 8471
+          "bytesInOutput": 8935
         },
         "modules/services/ImproveOsmService.js": {
           "bytesInOutput": 15648
@@ -31164,7 +31159,7 @@
           "bytesInOutput": 11323
         },
         "modules/services/OsmService.js": {
-          "bytesInOutput": 46305
+          "bytesInOutput": 46329
         },
         "modules/services/OsmoseService.js": {
           "bytesInOutput": 10796
@@ -31233,7 +31228,7 @@
           "bytesInOutput": 512
         }
       },
-      "bytes": 4909780
+      "bytes": 4910595
     }
   }
 }

@@ -4,7 +4,7 @@ import { Extent } from '@rapid-sdk/math';
 import { marked } from 'marked';
 
 import { uiIcon } from './icon.js';
-import { uiCombobox} from './combobox.js';
+import { uiCombobox } from './combobox.js';
 import { utilKeybinding, utilNoAuto, utilRebind } from '../util/index.js';
 
 
@@ -419,9 +419,9 @@ export function uiRapidViewManageEsriDatasets(context, parentModal) {
 
     return aAdded && !bAdded ? -1
       : bAdded && !aAdded ? 1
-      : aFeatured && !bFeatured ? -1
-      : bFeatured && !aFeatured ? 1
-      : a.title.localeCompare(b.title);
+        : aFeatured && !bFeatured ? -1
+          : bFeatured && !aFeatured ? 1
+            : a.title.localeCompare(b.title);
   }
 
 
@@ -457,7 +457,7 @@ export function uiRapidViewManageEsriDatasets(context, parentModal) {
         label: d.title,
         license_markdown: l10n.t('rapid_feature_toggle.esri.license_markdown')
       };
-
+      console.log('dataset', d);
       if (d.extent) {
         dataset.extent = new Extent(d.extent[0], d.extent[1]);
       }

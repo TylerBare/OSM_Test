@@ -459,10 +459,11 @@ export function uiRapidViewManageGeonodeDatasets(context, parentModal) {
         label: d.title,
         license_markdown: l10n.t('rapid_feature_toggle.esri.license_markdown')
       };
-
+      console.log('d', d);
       if (d.extent) {
-        dataset.extent = new Extent(d.extent[0], d.extent[1]);
+        dataset.extent = new Extent([d.extent.coords[0], d.extent.coords[1]], [d.extent.coords[2], d.extent.coords[3]]);
       }
+      console.log('daraset', dataset);
 
       // Experiment: run building layers through MapWithAI conflation service
       if (isBuildings) {

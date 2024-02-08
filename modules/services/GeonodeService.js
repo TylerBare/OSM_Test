@@ -1,6 +1,5 @@
 import { select as d3_select } from 'd3-selection';
 import { Tiler } from '@rapid-sdk/math';
-import { utilQsString } from '@rapid-sdk/util';
 
 import { AbstractSystem } from '../core/AbstractSystem';
 import { Graph, Tree } from '../core/lib';
@@ -86,7 +85,6 @@ export class GeonodeService extends AbstractSystem {
    * @return  {Array}   Array of data (OSM Entities)
    */
   getData(datasetID) {
-    console.log(this._map.zoom());
     const ds = this._datasets[datasetID];
     if (!ds || !ds.tree || !ds.graph) return [];
 
@@ -114,7 +112,6 @@ export class GeonodeService extends AbstractSystem {
           fetch(that._datasetsURL(pageNumber))
             .then(utilFetchResponse)
             .then(json => {
-              console.log('json', json);
               for (const ds of json.datasets ?? []) {
                 that._parseDataset(ds);
               }
@@ -123,7 +120,6 @@ export class GeonodeService extends AbstractSystem {
                 fetchMore(page);
               } else {
                 that._gotDatasets = true;
-                console.log('datasets', that._datasets);
                 resolve(that._datasets);
               }
             })
@@ -138,7 +134,6 @@ export class GeonodeService extends AbstractSystem {
 
   loadLayerAsync(datasetID) {
     let ds = this._datasets[datasetID];
-    console.log('ds', ds);
     if (!ds || !ds.url) {
       return Promise.reject(`Unknown datasetID: ${datasetID}`);
     } else if (ds.layer) {
@@ -173,7 +168,7 @@ export class GeonodeService extends AbstractSystem {
           ds.graph.rebase(results, [ds.graph], true);
           ds.tree.rebase(results, true);
         });
-
+        console.log('ds.layer', ds.layer);  // eslint-disable-line
         return ds.layer;
       })
       .catch(e => {
@@ -238,9 +233,13 @@ export class GeonodeService extends AbstractSystem {
   }
 
   _parseFeature(feature, dataset) {
-    const geom = feature.geometry;
+    let geom = feature.geometry;
     const props = feature.properties;
     if (!geom || !props) return null;
+
+    if (geom.type === 'MultiLineString') {
+      geom = multiLineStringToLineString(geom);
+    }
 
     const featureID = props[dataset.layer.idfield] || props.OBJECTID || props.FID || props.ogc_fid || props.id;
     if (!featureID) return null;
@@ -253,12 +252,11 @@ export class GeonodeService extends AbstractSystem {
     const metadata = { __fbid__: id, __service__: 'geonode', __datasetid__: dataset.id };
     let entities = [];
     let nodemap = new Map();
-
     // Point:  make a single node
     if (geom.type === 'Point') {
-      return [ new osmNode({ loc: geom.coordinates, tags: parseTags(props) }, metadata) ];
+      return [new osmNode({ loc: geom.coordinates, tags: parseTags(props) }, metadata)];
 
-    // LineString:  make nodes, single way
+      // LineString:  make nodes, single way
     } else if (geom.type === 'LineString') {
       const nodelist = parseCoordinates(geom.coordinates);
       if (nodelist.length < 2) return null;
@@ -267,7 +265,7 @@ export class GeonodeService extends AbstractSystem {
       entities.push(w);
       return entities;
 
-    // Polygon:  make nodes, way(s), possibly a relation
+      // Polygon:  make nodes, way(s), possibly a relation
     } else if (geom.type === 'Polygon') {
       let ways = [];
       for (const ring of geom.coordinates ?? []) {
@@ -284,7 +282,7 @@ export class GeonodeService extends AbstractSystem {
 
       if (ways.length === 1) {  // single ring, assign tags and return
         entities.push(
-          ways[0].update( Object.assign({ tags: parseTags(props) }, metadata) )
+          ways[0].update(Object.assign({ tags: parseTags(props) }, metadata))
         );
       } else {  // multiple rings, make a multipolygon relation with inner/outer members
         const members = ways.map((w, i) => {
@@ -299,6 +297,23 @@ export class GeonodeService extends AbstractSystem {
       return entities;
     }
     // no Multitypes for now (maybe not needed)
+
+    function multiLineStringToLineString(multiLineString) {
+      if (multiLineString.type !== 'MultiLineString') {
+        throw new Error('Input is not a MultiLineString');
+      }
+
+      const lineStringCoordinates = multiLineString.coordinates.reduce((acc, line) => {
+        return acc.concat(line);
+      }, []);
+
+      const lineString = {
+        type: 'LineString',
+        coordinates: lineStringCoordinates,
+      };
+
+      return lineString;
+    }
 
     function parseCoordinates(coords) {
       let nodelist = [];
@@ -325,7 +340,7 @@ export class GeonodeService extends AbstractSystem {
         }
       }
 
-      tags.source = `esri/${dataset.name}`;
+      tags.source = `nysdot/${dataset.name}`;
       return tags;
     }
 
