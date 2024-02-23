@@ -81,6 +81,7 @@ export class OsmService extends AbstractSystem {
       pathname = '/rapid/';
     }
 
+
     this._oauth = osmAuth({
       url: this._wwwroot,
       apiUrl: this._apiroot,
@@ -162,8 +163,8 @@ export class OsmService extends AbstractSystem {
 
     return this.resetAsync()
       .then(() => {
-// causes major issues for the tests
-//        this.userChangesets(function() {});  // eagerly load user details/changesets
+        // causes major issues for the tests
+        //        this.userChangesets(function() {});  // eagerly load user details/changesets
         this.emit('authchange');
       });
   }
@@ -247,7 +248,7 @@ export class OsmService extends AbstractSystem {
         this.logout();
         this.loadFromAPI(path, callback, options);
 
-      // else, no retry..
+        // else, no retry..
       } else {
         // 509 Bandwidth Limit Exceeded, 429 Too Many Requests
         // Set the rateLimitError flag and trigger a warning..
@@ -534,7 +535,7 @@ export class OsmService extends AbstractSystem {
         // Closing the changeset is optional, and we won't get a result.
         // Only try to close the changeset if we're still talking to the same server.
         if (this.connectionID === cid) {
-          this.closeChangeset(changeset, () => {});
+          this.closeChangeset(changeset, () => { });
         }
       });
     });
@@ -803,7 +804,7 @@ export class OsmService extends AbstractSystem {
     const deferLoadUsers = _throttle(() => {
       const uids = Object.keys(that._userCache.toLoad);
       if (!uids.length) return;
-      that.loadUsers(uids, function() {});  // eagerly load user details
+      that.loadUsers(uids, function () { });  // eagerly load user details
     }, 750);
 
     // determine the needed tiles to cover the view
@@ -832,7 +833,7 @@ export class OsmService extends AbstractSystem {
       const options = { skipSeen: false };
       cache.inflight[tile.id] = this.loadFromAPI(
         path + tile.wgs84Extent.toParam(),
-        function(err) {
+        function (err) {
           delete that._noteCache.inflight[tile.id];
           if (!err) {
             that._noteCache.loaded[tile.id] = true;
@@ -1052,7 +1053,7 @@ export class OsmService extends AbstractSystem {
       this._rateLimitError = undefined;
       this.emit('authchange');
       if (callback) callback(err, res);
-      this.userChangesets(function() {});  // eagerly load user details/changesets
+      this.userChangesets(function () { });  // eagerly load user details/changesets
     };
 
     this._oauth.authenticate(done);
@@ -1137,7 +1138,7 @@ export class OsmService extends AbstractSystem {
   _getLoc(attrs) {
     const lon = attrs.lon?.value;
     const lat = attrs.lat?.value;
-    return [ parseFloat(lon), parseFloat(lat) ];
+    return [parseFloat(lon), parseFloat(lat)];
   }
 
 
@@ -1240,7 +1241,7 @@ export class OsmService extends AbstractSystem {
   _parseJSON(payload, callback, options) {
     options = Object.assign({ skipSeen: true }, options);
 
-    if (!payload)  {
+    if (!payload) {
       return callback({ message: 'No JSON', status: -1 });
     }
 
@@ -1411,21 +1412,21 @@ export class OsmService extends AbstractSystem {
 
   _parseNodeJSON(obj, uid) {
     return new osmNode({
-      id:  uid,
+      id: uid,
       visible: typeof obj.visible === 'boolean' ? obj.visible : true,
       version: obj.version?.toString(),
       changeset: obj.changeset?.toString(),
       timestamp: obj.timestamp,
       user: obj.user,
       uid: obj.uid?.toString(),
-      loc: [ parseFloat(obj.lon), parseFloat(obj.lat) ],
+      loc: [parseFloat(obj.lon), parseFloat(obj.lat)],
       tags: obj.tags
     });
   }
 
   _parseWayJSON(obj, uid) {
     return new osmWay({
-      id:  uid,
+      id: uid,
       visible: typeof obj.visible === 'boolean' ? obj.visible : true,
       version: obj.version?.toString(),
       changeset: obj.changeset?.toString(),
@@ -1439,7 +1440,7 @@ export class OsmService extends AbstractSystem {
 
   _parseRelationJSON(obj, uid) {
     return new osmRelation({
-      id:  uid,
+      id: uid,
       visible: typeof obj.visible === 'boolean' ? obj.visible : true,
       version: obj.version?.toString(),
       changeset: obj.changeset?.toString(),

@@ -23663,7 +23663,7 @@
       "format": "esm"
     },
     "modules/services/OsmService.js": {
-      "bytes": 48838,
+      "bytes": 48888,
       "imports": [
         {
           "path": "node_modules/@rapid-sdk/math/built/math.mjs",
@@ -28259,7 +28259,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 9624039
+      "bytes": 9624106
     },
     "dist/rapid.js": {
       "imports": [],
@@ -31159,7 +31159,7 @@
           "bytesInOutput": 11323
         },
         "modules/services/OsmService.js": {
-          "bytesInOutput": 46329
+          "bytesInOutput": 46364
         },
         "modules/services/OsmoseService.js": {
           "bytesInOutput": 10796
@@ -31228,7 +31228,7 @@
           "bytesInOutput": 512
         }
       },
-      "bytes": 4910595
+      "bytes": 4910630
     }
   }
 }
