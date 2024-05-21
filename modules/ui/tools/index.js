@@ -5,3 +5,4 @@ export * from './rapid_features.js';
 export * from './save.js';
 export * from './sidebar_toggle.js';
 export * from './undo_redo.js';
+export * from './feature_form.js';

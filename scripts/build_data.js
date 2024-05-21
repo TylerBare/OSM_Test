@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import stringify from 'json-stringify-pretty-compact';
 import shell from 'shelljs';
 import YAML from 'js-yaml';
+import {readFileSync} from "node:fs";
 
 import * as languageNames from './language_names.js';
 
@@ -14,11 +15,16 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 fontawesome.library.add(fas, far, fab);
 
-import categoriesJSON from '@openstreetmap/id-tagging-schema/dist/preset_categories.min.json' assert { type: 'json' }
-import fieldsJSON from '@openstreetmap/id-tagging-schema/dist/fields.min.json' assert { type: 'json' }
-import presetsJSON from '@openstreetmap/id-tagging-schema/dist/presets.min.json' assert { type: 'json' }
-import qaDataJSON from '../data/qa_data.json' assert { type: 'json' }
-import territoriesJSON from 'cldr-core/supplemental/territoryInfo.json' assert { type: 'json' };
+// import categoriesJSON from '@openstreetmap/id-tagging-schema/dist/preset_categories.min.json' assert { type: 'json' }
+// import fieldsJSON from '@openstreetmap/id-tagging-schema/dist/fields.min.json' assert { type: 'json' }
+// import presetsJSON from '@openstreetmap/id-tagging-schema/dist/presets.min.json' assert { type: 'json' }
+// import qaDataJSON from '../data/qa_data.json' assert { type: 'json' }
+
+const categoriesJSON = JSON.parse(readFileSync('node_modules/@openstreetmap/id-tagging-schema/dist/preset_categories.min.json', 'utf8'));
+const fieldsJSON = JSON.parse(readFileSync('node_modules/@openstreetmap/id-tagging-schema/dist/fields.min.json', 'utf8'));
+const presetsJSON = JSON.parse(readFileSync('node_modules/@openstreetmap/id-tagging-schema/dist/presets.min.json', 'utf8'));
+const qaDataJSON = JSON.parse(readFileSync('data/qa_data.json', 'utf8'));
+const territoriesJSON = JSON.parse(readFileSync('node_modules/cldr-core/supplemental/territoryInfo.json', 'utf8'));
 
 
 let _currBuild = null;
